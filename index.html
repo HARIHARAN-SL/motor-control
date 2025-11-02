@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Relay Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .switch input {
+      display: none;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px; width: 26px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Relay Control</h2>
+  <label class="switch">
+    <input type="checkbox" id="relayToggle">
+    <span class="slider"></span>
+  </label>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDusLrdaL7zaTwl3lV8f-TSvbshmGs8nX0",
+      authDomain: "hari-90418.firebaseapp.com",
+      databaseURL: "https://hari-90418-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hari-90418",
+      storageBucket: "hari-90418.appspot.com",
+      messagingSenderId: "737080272615",  // Replace with actual value
+      appId: "1:737080272615:web:53d2ac62927b30a9cae442"                  // Replace with actual value
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const toggle = document.getElementById("relayToggle");
+
+    // Read initial state
+    db.ref("/light").on("value", snapshot => {
+      const state = snapshot.val();
+      toggle.checked = state === true;
+    });
+
+    // Write state on toggle
+    toggle.addEventListener("change", () => {
+      db.ref("/light").set(toggle.checked);
+    });
+  </script>
+
+</body>
+</html>
